@@ -47,15 +47,6 @@ class M_mahasiswa extends CI_Model {
 		}
 	}
 
-	function get_datatables()
-	{
-		$this->_get_datatables_query();
-		if($_POST['length'] != -1)
-		$this->db->limit($_POST['length'], $_POST['start']);
-		$query = $this->db->get();
-		return $query->result();
-	}
-
 	function count_filtered()
 	{
 		$this->_get_datatables_query();
@@ -69,6 +60,15 @@ class M_mahasiswa extends CI_Model {
 		return $this->db->count_all_results();
 	}
 
+	function get_datatables()
+	{
+		$this->_get_datatables_query();
+		if($_POST['length'] != -1)
+		$this->db->limit($_POST['length'], $_POST['start']);
+		$query = $this->db->get();
+		return $query->result();
+	}
+	
 	public function get_by_id($nim)
 	{
 		$this->db->from($this->table);
@@ -112,23 +112,6 @@ class M_mahasiswa extends CI_Model {
 		$this->db->where_in('mahasiswa.nim', $nim);
 		$data = $this->db->get();
 		return $data->result();
-		// $query = $this->db->query("
-		// 	select 
-		// 		mahasiswa.nama,
-		// 		matkul.kelas,
-		// 		matkul.ruang,
-		// 		matkul.matkul,
-		// 		grade.grade,
-		// 		matkul.sks,
-		// 		mahasiswa.jml_sks,
-		// 		mahasiswa.ipk
-		// 	from mahasiswa, grade, matkul, nilai
-		// 	where 
-		// 		mahasiswa.nim 	= $nim and
-		// 		nilai.nim 		= mahasiswa.nim and 
-		// 		nilai.id_matkul = matkul.id_matkul and
-		// 		nilai.id_grade 	= grade.id_grade");
-		// return $query->result();
 	}
 }
 

@@ -23,6 +23,14 @@
 <!-- SIDEBAR LEFT -->
 <?php echo @$_sidebar; ?>
 
+<?php
+$this->user_login = $this->session->userdata('user_session');
+	if (count($this->user_login) == 0) {
+		$this->session->set_flashdata('alert_msg', err_msg('Silahkan login terlebih dahulu'));
+		redirect('auth');
+	}
+?>
+
 <!-- CONTENT -->
 <?php echo @$_body; ?>
   

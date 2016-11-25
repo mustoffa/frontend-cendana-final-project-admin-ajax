@@ -1,2 +1,3 @@
 # frontend-cendana-final-project-admin-ajax
-masih dalam proses
+username : admin
+password : admin

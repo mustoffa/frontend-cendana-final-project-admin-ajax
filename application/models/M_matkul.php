@@ -1,12 +1,12 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class M_dosen extends CI_Model {
+class M_matkul extends CI_Model {
 
-	var $table = 'dosen';
-	var $column_order = array('nama','jenkel','tgl_lahir','alamat',null);
-	var $column_search = array('nama','alamat');
-	var $order = array('nip' => 'desc'); // default order 
+	var $table = 'show_matkul';
+	var $column_order = array('matkul','kelas','ruang','sks',null);
+	var $column_search = array('matkul','ruang');
+	var $order = array('id_matkul' => 'desc'); // default order 
 
 	public function __construct()
 	{
@@ -69,10 +69,10 @@ class M_dosen extends CI_Model {
 		return $query->result();
 	}
 
-	public function get_by_id($nip)
+	public function get_by_id($id_matkul)
 	{
 		$this->db->from($this->table);
-		$this->db->where('nip',$nip);
+		$this->db->where('id_matkul',$id_matkul);
 		$query = $this->db->get();
 		return $query->row();
 	}
@@ -83,33 +83,33 @@ class M_dosen extends CI_Model {
 		return $this->db->affected_rows();
 	}
 
-	public function delete_by_id($nip)
+	public function delete_by_id($id_matkul)
 	{
-		$this->db->where('nip', $nip);
-		$this->db->delete($this->table);
+		$this->db->where('id_matkul', $id_matkul);
+		$this->db->delete('matkul');
+		return $this->db->affected_rows();
 	}
 
 	public function save($data)
 	{
-		$this->db->insert($this->table, $data);
-		return $this->db->insert_id();
+		$this->db->insert('matkul', $data);
+		return $this->db->affected_rows();
 	}
 
-	public function detail($nip)
+	public function detail($id_matkul)
 	{
-		$this->db->select('	dosen.nama,
-							matkul.matkul,
-							matkul.kelas,
-							matkul.ruang,
-							matkul.sks');
-		$this->db->from('dosen');
-		$this->db->join('matkul', 'matkul.nip = dosen.nip');
-		$this->db->where_in('dosen.nip', $nip);
-		$data = $this->db->get();
+		$this->db->where('id_matkul', $id_matkul);
+		$data = $this->db->get('show_matkul');
+		return $data->result();
+	}
+
+	public function show_dosen()
+	{
+		$data = $this->db->get('dosen');
 		return $data->result();
 	}
 
 }
 
-/* End of file M_dosen.php */
-/* Location: ./application/models/M_dosen.php */
+/* End of file M_matkul.php */
+/* Location: ./application/models/M_matkul.php */

@@ -1,47 +1,36 @@
 <div class="content-wrapper">
     <section class="content">
-        <h1>Data nilai</h1><br />
+        <h1>Data Nilai</h1><br />
 
-        <button class="btn btn-success" onclick="add_nilai()"><i class="glyphicon glyphicon-plus"></i> Add nilai</button>
+        <button class="btn btn-success" onclick="add_nilai()"><i class="glyphicon glyphicon-plus"></i> Add Nilai</button>
         <button class="btn btn-default" onclick="reload_table()"><i class="glyphicon glyphicon-refresh"></i> Reload</button><br /><br />
         
         <table id="table" class="table-hover table-bordered table table-striped" cellspacing="0" width="100%">
             <thead>
                 <tr class="info">
                     <th>Nama</th>
-                    <th>Kelas</th>
-                    <th>Ruang</th>
-                    <th>Matkul</th>
-                    <th>Grade</th>
+                    <th>Mata Kuliah</th>
                     <th>SKS</th>
-                    <th>Jml SKS</th>
-                    <th>IPK</th>
+                    <th>Grade</th>
                     <th style="width:125px;">Action</th>
                 </tr>
             </thead>
             <tbody>
             </tbody>
-            <!-- <tfoot>
+            <tfoot>
 	            <tr class="info">
-	                <th colspan="7">&nbsp</th>
+	                <th colspan="5">&nbsp</th>
 	            </tr>
-            </tfoot> -->
+            </tfoot>
         </table>
    	</section>
 </div>
-
-<script src="<?php echo base_url('assets/plugins/jQuery/jquery-2.2.3.min.js')?>"></script>
-<script src="<?php echo base_url('assets/bootstrap/js/bootstrap.min.js')?>"></script>
-<script src="<?php echo base_url('assets/plugins/datatables/jquery.dataTables.min.js')?>"></script>
-<script src="<?php echo base_url('assets/plugins/datatables/dataTables.bootstrap.js')?>"></script>
-<script src="<?php echo base_url('assets/plugins/datepicker/bootstrap-datepicker.js')?>"></script>
 
 <script type="text/javascript">
 	var save_method; //for save method string
 	var table;
 	$(document).ready(function() {
 	    //datatables
-
 	    table = $('#table').DataTable({ 
 	        "processing": true, //Feature control the processing indicator.
 	        "serverSide": true, //Feature control DataTables' server-side processing mode.
@@ -58,16 +47,6 @@
 		            "orderable": false, //set not orderable
 		        },
 	        ],
-	    });
-
-	    //datepicker
-	    $('.datepicker').datepicker({
-	        autoclose: true,
-	        format: "yyyy-mm-dd",
-	        todayHighlight: true,
-	        orientation: "top auto",
-	        todayBtn: true,
-	        todayHighlight: true,  
 	    });
 
 	    //set input/textarea/select event when change value, remove class error and remove text help block 
@@ -92,9 +71,43 @@
 	    $('.form-group').removeClass('has-error'); // clear error class
 	    $('.help-block').empty(); // clear error string
 	    $('#modal_form').modal('show'); // show bootstrap modal
-	    $('.modal-title').text('Add nilai'); // Set Title to Bootstrap modal title
+	    $('.modal-title').text('Add Nilai'); // Set Title to Bootstrap modal title
 	}
 
+	function show_detail(id_nilai, nama_mhs)
+	{
+	 	save_method = 'show';
+	    $('#form_show')[0].reset(); // reset form on modals
+	    $('.form-group').removeClass('has-error'); // clear error class
+	    $('.help-block').empty(); // clear error string
+	    //Ajax Load data from ajax
+	    $.ajax({
+	        url : "<?php echo site_url('nilai/detail_show/')?>/" + id_nilai,
+	        type: "GET",
+	        dataType: "JSON",
+	        success: function(datas)
+	        {
+	        	var strHTML;
+	        	jQuery.each( datas, function( i, data ) {
+				  strHTML += "<tr>";
+					  strHTML += "<td>" + data.matkul + "</td>";
+					  strHTML += "<td>" + data.kelas + "</td>";
+					  strHTML += "<td>" + data.ruang + "</td>";
+					  strHTML += "<td>" + data.sks + "</td>";
+					  strHTML += "<td>" + data.grade + "</td>";
+				  strHTML += "</tr>";
+				});
+				$("#tableResult").find("tbody").html(strHTML);
+	            $('#modal_show').modal('show'); // show bootstrap modal when complete loaded
+	            $('.modal-title').text(nama_mhs); // Set title to Bootstrap modal title
+	        },
+	        error: function (jqXHR, textStatus, errorThrown)
+	        {
+	            alert('Error get data from nilai');
+	        }
+	    });   
+	}
+	
 	function edit_nilai(id_nilai)
 	{
 	    save_method = 'update';
@@ -109,14 +122,11 @@
 	        success: function(data)
 	        {
 	            $('[name="id_nilai"]').val(data.id_nilai);
-	            $('[name="nama"]').val(data.nama);
-	            $('[name="jenkel"]').val(data.jenkel);
-	            $('[name="tgl_lahir"]').datepicker('update',data.tgl_lahir);
-	            $('[name="alamat"]').val(data.alamat);
-	            $('[name="jml_sks"]').val(data.jml_sks);
-	            $('[name="ipk"]').val(data.ipk);
+	            $('[name="nim"]').val(data.nim);
+	            $('[name="id_matkul"]').val(data.id_matkul);
+	            $('[name="id_grade"]').val(data.id_grade);
 	            $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-	            $('.modal-title').text('Edit nilai'); // Set title to Bootstrap modal title
+	            $('.modal-title').text('Edit Nilai'); // Set title to Bootstrap modal title
 	        },
 	        error: function (jqXHR, textStatus, errorThrown)
 	        {
@@ -147,43 +157,7 @@
 	        });
 	    }
 	}
-
-	function show_detail(id_nilai, nama, jml_sks, ipk)
-	{
-	 	save_method = 'show';
-	    $('#form_show')[0].reset(); // reset form on modals
-	    $('.form-group').removeClass('has-error'); // clear error class
-	    $('.help-block').empty(); // clear error string
-	    //Ajax Load data from ajax
-	    $.ajax({
-	        url : "<?php echo site_url('nilai/detail_show/')?>/" + id_nilai,
-	        type: "GET",
-	        dataType: "JSON",
-	        success: function(datas)
-	        {
-	        	var strHTML;
-	        	jQuery.each( datas, function( i, data ) {
-				  strHTML += "<tr>";
-					  strHTML += "<td>" + data.kelas + "</td>";
-					  strHTML += "<td>" + data.ruang + "</td>";
-					  strHTML += "<td>" + data.matkul + "</td>";
-					  strHTML += "<td>" + data.grade + "</td>";
-					  strHTML += "<td>" + data.sks + "</td>";
-				  strHTML += "</tr>";
-				});
-				$("#tableResult").find("tbody").html(strHTML);
-	            $('#modal_show').modal('show'); // show bootstrap modal when complete loaded
-	            $('.modal-title').text(nama); // Set title to Bootstrap modal title
-	            $('#jml_sks').text(jml_sks); // Set title to Bootstrap modal title
-	            $('#ipk').text(ipk); // Set title to Bootstrap modal title
-	        },
-	        error: function (jqXHR, textStatus, errorThrown)
-	        {
-	            alert('Error get data from nilai');
-	        }
-	    });   
-	}
-
+	
 	function reload_table()
 	{
 	    table.ajax.reload(null,false); //reload datatable ajax 
@@ -235,7 +209,7 @@
 	}
 </script>
 
-<!-- Modal Show Nilai -->
+<!-- Modal Show Detail -->
 <div class="modal fade" id="modal_show" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -243,7 +217,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 	<span aria-hidden="true">&times;</span>
                 </button>
-                <h3 class="modal-title">Nilai nilai</h3>
+                <h3 class="modal-title"></h3>
             </div>
 
             <div class="modal-body form">
@@ -251,30 +225,20 @@
 	                <table id="tableResult" class="table-hover table-bordered table table-striped" cellspacing="0" width="100%">
 			            <thead>
 			                <tr class="info">
+			                    <th>Matkul</th>
 			                    <th>Kelas</th>
 			                    <th>Ruang</th>
-			                    <th>Mata Kuliah</th>
-			                    <th>Grade</th>
 			                    <th>SKS</th>
+			                    <th>Grade</th>
 			                </tr>
 			            </thead>
 			            <tbody>
 			            </tbody>
 			            <tfoot>
 				            <tr class="info">
-				                <th colspan="7">&nbsp</th>
+				                <th colspan="5">&nbsp</th>
 				            </tr>
 			            </tfoot>
-			        </table>
-			        <table id="tableResult" class="table" cellspacing="0" width="100%">
-		            	<tr>
-		            		<td width="20%">Jumlah SKS</td>
-			            	<td id="jml_sks"></td>
-		            	</tr>
-		            	<tr>
-		            		<td width="20%">IPK</td>
-			            	<td id="ipk"></td>
-		            	</tr>
 			        </table>
                 </form>
             </div>
@@ -290,7 +254,7 @@
 <!-- End Bootstrap modal -->
 
 
-<!-- Modal Show nilai -->
+<!-- Modal Show edit -->
 <div class="modal fade" id="modal_form" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -298,7 +262,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 	<span aria-hidden="true">&times;</span>
                 </button>
-                <h3 class="modal-title">nilai Form</h3>
+                <h3 class="modal-title"></h3>
             </div>
 
             <div class="modal-body form">
@@ -310,51 +274,38 @@
                         <div class="form-group">
                             <label class="control-label col-md-3">Nama</label>
                             <div class="col-md-9">
-                                <input name="nama" placeholder="Nama" class="form-control" type="text">
+                                <select name="nim" class="form-control">
+                                	<option value="">--Select Mahasiswa--</option>
+						          	<?php foreach ($data_mhs as $mhs) { ?>
+						          	<option value="<?=$mhs->nim?>"><?=$mhs->nama?></option>
+						            <?php } ?>
+                                </select>
                                 <span class="help-block"></span>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-3">Jenis Kelamin</label>
+                            <label class="control-label col-md-3">Mata Kuliah</label>
                             <div class="col-md-9">
-                                <select name="jenkel" class="form-control">
-                                    <option value="">--Select Jenis Kelamin--</option>
-                                    <option value="Pria">Pria</option>
-                                    <option value="Wanita">Wanita</option>
+                                <select name="id_matkul" class="form-control">
+                                	<option value="">--Select Mata Kuliah--</option>
+						          	<?php foreach ($data_matkul as $matkul) { ?>
+						          	<option value="<?=$matkul->id_matkul?>"><?=$matkul->matkul?></option>
+						            <?php } ?>
                                 </select>
                                 <span class="help-block"></span>
                             </div>
                         </div>
                         
                         <div class="form-group">
-                            <label class="control-label col-md-3">Tanggal Lahir</label>
+                            <label class="control-label col-md-3">Grade</label>
                             <div class="col-md-9">
-                                <input name="tgl_lahir" placeholder="dd-mm-yyyy" class="form-control datepicker" type="text">
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="control-label col-md-3">Alamat</label>
-                            <div class="col-md-9">
-                                <input name="alamat" placeholder="Alamat" class="form-control" type="text">
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="control-label col-md-3">Jumlah SKS</label>
-                            <div class="col-md-9">
-                                <textarea name="jml_sks" placeholder="Jumlah SKS" class="form-control"></textarea>
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-3">IPK</label>
-                            <div class="col-md-9">
-                                <textarea name="ipk" placeholder="IPK" class="form-control"></textarea>
+                                <select name="id_grade" class="form-control">
+                                	<option value="">--Select Grade--</option>
+						          	<?php foreach ($data_grade as $grade) { ?>
+						          	<option value="<?=$grade->id_grade?>"><?=$grade->grade?></option>
+						            <?php } ?>
+                                </select>
                                 <span class="help-block"></span>
                             </div>
                         </div>
@@ -374,3 +325,5 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <!-- End Bootstrap modal -->
+
+<!-- Modal Show add -->

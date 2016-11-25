@@ -1,19 +1,17 @@
 <div class="content-wrapper">
     <section class="content">
-        <h1>Data Mahasiswa</h1><br />
+        <h1>Data Kelas</h1><br />
 
-        <button class="btn btn-success" onclick="add_mhs()"><i class="glyphicon glyphicon-plus"></i> Add Mahasiswa</button>
+        <button class="btn btn-success" onclick="add_matkul()"><i class="glyphicon glyphicon-plus"></i> Add Kelas</button>
         <button class="btn btn-default" onclick="reload_table()"><i class="glyphicon glyphicon-refresh"></i> Reload</button><br /><br />
         
         <table id="table" class="table-hover table-bordered table table-striped" cellspacing="0" width="100%">
             <thead>
                 <tr class="info">
-                    <th>Nama</th>
-                    <th>Jenkel</th>
-                    <th>Tgl Lahir</th>
-                    <th>Alamat</th>
-                    <th>Jumlah SKS</th>
-                    <th>IPK</th>
+                    <th>Mata Kuliah</th>
+                    <th>Kelas</th>
+                    <th>Ruang</th>
+                    <th>SKS</th>
                     <th style="width:125px;">Action</th>
                 </tr>
             </thead>
@@ -21,7 +19,7 @@
             </tbody>
             <tfoot>
 	            <tr class="info">
-	                <th colspan="7">&nbsp</th>
+	                <th colspan="5">&nbsp</th>
 	            </tr>
             </tfoot>
         </table>
@@ -39,7 +37,7 @@
 	        "order": [], //Initial no order.
 	        // Load data for the table's content from an Ajax source
 	        "ajax": {
-	            "url": "<?php echo site_url('mahasiswa/mhs_list')?>",
+	            "url": "<?php echo site_url('matkul/matkul_list')?>",
 	            "type": "POST"
 	        },
 	        //Set column definition initialisation properties.
@@ -49,16 +47,6 @@
 		            "orderable": false, //set not orderable
 		        },
 	        ],
-	    });
-
-	    //datepicker
-	    $('.datepicker').datepicker({
-	        autoclose: true,
-	        format: "yyyy-mm-dd",
-	        todayHighlight: true,
-	        orientation: "top auto",
-	        todayBtn: true,
-	        todayHighlight: true,  
 	    });
 
 	    //set input/textarea/select event when change value, remove class error and remove text help block 
@@ -76,17 +64,17 @@
 	    });
 	});
 
-	function add_mhs()
+	function add_matkul()
 	{
 	    save_method = 'add';
 	    $('#form')[0].reset(); // reset form on modals
 	    $('.form-group').removeClass('has-error'); // clear error class
 	    $('.help-block').empty(); // clear error string
 	    $('#modal_form').modal('show'); // show bootstrap modal
-	    $('.modal-title').text('Add Mahasiswa'); // Set Title to Bootstrap modal title
+	    $('.modal-title').text('Add Kelas'); // Set Title to Bootstrap modal title
 	}
 
-	function show_detail(nim, nama, jml_sks, ipk)
+	function show_detail(id_matkul, matkul)
 	{
 	 	save_method = 'show';
 	    $('#form_show')[0].reset(); // reset form on modals
@@ -94,7 +82,7 @@
 	    $('.help-block').empty(); // clear error string
 	    //Ajax Load data from ajax
 	    $.ajax({
-	        url : "<?php echo site_url('mahasiswa/detail_show/')?>/" + nim,
+	        url : "<?php echo site_url('matkul/detail_show/')?>/" + id_matkul,
 	        type: "GET",
 	        dataType: "JSON",
 	        success: function(datas)
@@ -104,25 +92,22 @@
 				  strHTML += "<tr>";
 					  strHTML += "<td>" + data.kelas + "</td>";
 					  strHTML += "<td>" + data.ruang + "</td>";
-					  strHTML += "<td>" + data.matkul + "</td>";
-					  strHTML += "<td>" + data.grade + "</td>";
 					  strHTML += "<td>" + data.sks + "</td>";
+					  strHTML += "<td>" + data.nama + "</td>";
 				  strHTML += "</tr>";
 				});
 				$("#tableResult").find("tbody").html(strHTML);
 	            $('#modal_show').modal('show'); // show bootstrap modal when complete loaded
-	            $('.modal-title').text(nama); // Set title to Bootstrap modal title
-	            $('#jml_sks').text(jml_sks); // Set title to Bootstrap modal title
-	            $('#ipk').text(ipk); // Set title to Bootstrap modal title
+	            $('.modal-title').text(matkul); // Set title to Bootstrap modal title
 	        },
 	        error: function (jqXHR, textStatus, errorThrown)
 	        {
-	            alert('Error get data from mahasiswa');
+	            alert('Error get data from matkul');
 	        }
 	    });   
 	}
 	
-	function edit_mhs(nim)
+	function edit_matkul(id_matkul)
 	{
 	    save_method = 'update';
 	    $('#form')[0].reset(); // reset form on modals
@@ -130,35 +115,34 @@
 	    $('.help-block').empty(); // clear error string
 	    //Ajax Load data from ajax
 	    $.ajax({
-	        url : "<?php echo site_url('mahasiswa/mhs_edit/')?>/" + nim,
+	        url : "<?php echo site_url('matkul/matkul_edit/')?>/" + id_matkul,
 	        type: "GET",
 	        dataType: "JSON",
 	        success: function(data)
 	        {
-	            $('[name="nim"]').val(data.nim);
-	            $('[name="nama"]').val(data.nama);
-	            $('[name="jenkel"]').val(data.jenkel);
-	            $('[name="tgl_lahir"]').datepicker('update',data.tgl_lahir);
-	            $('[name="alamat"]').val(data.alamat);
-	            $('[name="jml_sks"]').val(data.jml_sks);
-	            $('[name="ipk"]').val(data.ipk);
+	            $('[name="id_matkul"]').val(data.id_matkul);
+	            $('[name="matkul"]').val(data.matkul);
+	            $('[name="kelas"]').val(data.kelas);
+	            $('[name="ruang"]').val(data.ruang);
+	            $('[name="sks"]').val(data.sks);
+	            $('[name="nip"]').val(data.nip);
 	            $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-	            $('.modal-title').text('Edit Mahasiswa'); // Set title to Bootstrap modal title
+	            $('.modal-title').text('Edit Kelas'); // Set title to Bootstrap modal title
 	        },
 	        error: function (jqXHR, textStatus, errorThrown)
 	        {
-	            alert('Error get data from mahasiswa');
+	            alert('Error get data from matkul');
 	        }
 	    });
 	}
 
-	function delete_mhs(nim)
+	function delete_matkul(id_matkul, nip)
 	{
 	    if(confirm('Are you sure delete this data?'))
 	    {
 	        // ajax delete data to database
 	        $.ajax({
-	            url : "<?php echo site_url('mahasiswa/mhs_delete')?>/"+nim,
+	            url : "<?php echo site_url('matkul/matkul_delete')?>/"+id_matkul,
 	            type: "POST",
 	            dataType: "JSON",
 	            success: function(data)
@@ -174,7 +158,7 @@
 	        });
 	    }
 	}
-
+	
 	function reload_table()
 	{
 	    table.ajax.reload(null,false); //reload datatable ajax 
@@ -186,11 +170,11 @@
 	    $('#btnSave').attr('disabled',true); //set button disable 
 	    var url;
 	    if(save_method == 'show') {
-	        url = "<?php echo site_url('mahasiswa/detail_show')?>";
+	        url = "<?php echo site_url('matkul/detail_show')?>";
 	    } else if(save_method == 'add') {
-	        url = "<?php echo site_url('mahasiswa/mhs_add')?>";
+	        url = "<?php echo site_url('matkul/matkul_add')?>";
 	    } else {
-	        url = "<?php echo site_url('mahasiswa/mhs_update')?>";
+	        url = "<?php echo site_url('matkul/matkul_update')?>";
 	    }
 	    // ajax adding data to database
 	    $.ajax({
@@ -226,7 +210,7 @@
 	}
 </script>
 
-<!-- Modal Show detail -->
+<!-- Modal Show Detail -->
 <div class="modal fade" id="modal_show" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -244,28 +228,17 @@
 			                <tr class="info">
 			                    <th>Kelas</th>
 			                    <th>Ruang</th>
-			                    <th>Mata Kuliah</th>
-			                    <th>Grade</th>
 			                    <th>SKS</th>
+			                    <th>Dosen</th>
 			                </tr>
 			            </thead>
 			            <tbody>
 			            </tbody>
 			            <tfoot>
 				            <tr class="info">
-				                <th colspan="5">&nbsp</th>
+				                <th colspan="4">&nbsp</th>
 				            </tr>
 			            </tfoot>
-			        </table>
-			        <table id="tableResult" class="table" cellspacing="0" width="100%">
-		            	<tr>
-		            		<td width="20%">Jumlah SKS</td>
-			            	<td id="jml_sks"></td>
-		            	</tr>
-		            	<tr>
-		            		<td width="20%">IPK</td>
-			            	<td id="ipk"></td>
-		            	</tr>
 			        </table>
                 </form>
             </div>
@@ -281,7 +254,7 @@
 <!-- End Bootstrap modal -->
 
 
-<!-- Modal Show Mahasiswa -->
+<!-- Modal Show matkul -->
 <div class="modal fade" id="modal_form" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -296,56 +269,49 @@
                 <form action="#" id="form" class="form-horizontal">
                     <div class="form-body">
                     	
-                    	<input type="hidden" value="" name="nim"/> 
+                    	<input type="hidden" value="" name="id_matkul"/> 
                         
                         <div class="form-group">
-                            <label class="control-label col-md-3">Nama</label>
+                            <label class="control-label col-md-3">Mata Kuliah</label>
                             <div class="col-md-9">
-                                <input name="nama" placeholder="Nama" class="form-control" type="text">
+                                <input name="matkul" placeholder="Mata Kuliah" class="form-control" type="text">
                                 <span class="help-block"></span>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="control-label col-md-3">Jenis Kelamin</label>
+                            <label class="control-label col-md-3">Kelas</label>
                             <div class="col-md-9">
-                                <select name="jenkel" class="form-control">
-                                    <option value="">--Select Jenis Kelamin--</option>
-                                    <option value="Pria">Pria</option>
-                                    <option value="Wanita">Wanita</option>
+                                <input name="kelas" placeholder="Kelas" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Ruang</label>
+                            <div class="col-md-9">
+                                <input name="ruang" placeholder="Ruang" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3">SKS</label>
+                            <div class="col-md-9">
+                                <input name="sks" placeholder="SKS" class="form-control" type="text">
+                                <span class="help-block"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Dosen</label>
+                            <div class="col-md-9">
+                                <select name="nip" class="form-control">
+                                	<option value="">--Select Dosen--</option>
+						          	<?php foreach ($data_dosen as $dosen) { ?>
+						          	<option value="<?=$dosen->nip?>"><?=$dosen->nama?></option>
+						            <?php } ?>
                                 </select>
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="control-label col-md-3">Tanggal Lahir</label>
-                            <div class="col-md-9">
-                                <input name="tgl_lahir" placeholder="dd-mm-yyyy" class="form-control datepicker" type="text">
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="control-label col-md-3">Alamat</label>
-                            <div class="col-md-9">
-                                <input name="alamat" placeholder="Alamat" class="form-control" type="text">
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="control-label col-md-3">Jumlah SKS</label>
-                            <div class="col-md-9">
-                                <textarea name="jml_sks" placeholder="Jumlah SKS" class="form-control"></textarea>
-                                <span class="help-block"></span>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="control-label col-md-3">IPK</label>
-                            <div class="col-md-9">
-                                <textarea name="ipk" placeholder="IPK" class="form-control"></textarea>
                                 <span class="help-block"></span>
                             </div>
                         </div>

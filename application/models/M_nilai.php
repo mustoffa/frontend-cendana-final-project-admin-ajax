@@ -3,10 +3,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class M_nilai extends CI_Model {
 
-	var $table = 'nilai';
-	var $column_order = array('nama','kelas','ruang','matkul','grade','sks','jml_sks','ipk',null);
-	var $column_search = array('nama','kelas','ipk');
-	var $order = array('nim' => 'desc'); // default order 
+	var $table = 'show_nilai';
+	var $column_order = array('nama_mhs','matkul','sks','grade',null);
+	var $column_search = array('nama_mhs','matkul');
+	var $order = array('id_nilai' => 'desc'); // default order 
 
 	public function __construct()
 	{
@@ -47,29 +47,6 @@ class M_nilai extends CI_Model {
 		}
 	}
 
-	function get_datatables()
-	{
-		// $this->_get_datatables_query();
-		// if($_POST['length'] != -1)
-		// $this->db->limit($_POST['length'], $_POST['start']);
-		// $query = $this->db->get();
-		// return $query->result();
-		$this->db->select('	mahasiswa.nama,
-							matkul.kelas,
-							matkul.ruang,
-							matkul.matkul,
-							grade.grade,
-							matkul.sks,
-							mahasiswa.jml_sks,
-							mahasiswa.ipk');
-		$this->db->from('nilai');
-		$this->db->join('mahasiswa', 'nilai.nim = mahasiswa.nim', 'left');
-		$this->db->join('matkul', 'nilai.id_matkul = matkul.id_matkul', 'left');
-		$this->db->join('grade', 'nilai.id_grade = grade.id_grade', 'left');
-		$query = $this->db->get();
-		return $query->result();
-	}
-
 	function count_filtered()
 	{
 		$this->_get_datatables_query();
@@ -83,10 +60,19 @@ class M_nilai extends CI_Model {
 		return $this->db->count_all_results();
 	}
 
-	public function get_by_id($nim)
+	function get_datatables()
+	{
+		$this->_get_datatables_query();
+		if($_POST['length'] != -1)
+		$this->db->limit($_POST['length'], $_POST['start']);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function get_by_id($id_nilai)
 	{
 		$this->db->from($this->table);
-		$this->db->where('nim',$nim);
+		$this->db->where('id_nilai',$id_nilai);
 		$query = $this->db->get();
 		return $query->row();
 	}
@@ -97,36 +83,46 @@ class M_nilai extends CI_Model {
 		return $this->db->affected_rows();
 	}
 
-	public function delete_by_id($nim)
+	public function delete_by_id($id_nilai)
 	{
-		$this->db->where('nim', $nim);
-		$this->db->delete($this->table);
+		// $this->db->where('id_nilai', $id_nilai);
+		// $this->db->delete($this->table);
+		$this->db->where('id_nilai', $id_nilai);
+		$this->db->delete('nilai');
+		return $this->db->affected_rows();
 	}
 
 	public function save($data)
 	{
-		$this->db->insert($this->table, $data);
-		return $this->db->insert_id();
+		// $this->db->insert($this->table, $data);
+		// return $this->db->insert_id();
+		$this->db->insert('nilai', $data);
+		return $this->db->affected_rows();
 	}
 
-	public function detail($nim)
+	public function detail($id_nilai)
 	{
-		$query = $this->db->query("
-			select 
-				mahasiswa.nama,
-				matkul.kelas,
-				matkul.ruang,
-				matkul.matkul,
-				grade.grade,
-				matkul.sks,
-				mahasiswa.jml_sks,
-				mahasiswa.ipk
-			from mahasiswa, grade, matkul, nilai
-			where 
-				nilai.nim 			= mahasiswa.nim and
-				nilai.id_matkul 	= matkul.id_matkul and
-				nilai.id_grade 		= grade.id_grade");
-		return $query->result();
+		$this->db->where('id_nilai', $id_nilai);
+		$data = $this->db->get('show_nilai');
+		return $data->result();
+	}
+
+	public function show_mhs()
+	{
+		$data = $this->db->get('mahasiswa');
+		return $data->result();
+	}
+
+	public function show_matkul()
+	{
+		$data = $this->db->get('matkul');
+		return $data->result();
+	}
+
+	public function show_grade()
+	{
+		$data = $this->db->get('grade');
+		return $data->result();
 	}
 
 }

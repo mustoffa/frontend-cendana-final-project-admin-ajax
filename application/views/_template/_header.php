@@ -121,7 +121,7 @@
               <img src="<?=base_url('assets')?>/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
               <p>
                 Mustofa Halim - Web Developer
-                <small>Member since Nov. 2012</small>
+                <small>Staff since Sept. 2016</small>
               </p>
             </li>
             <!-- Menu Body -->
@@ -145,7 +145,7 @@
                 <a href="#" class="btn btn-default btn-flat">Profile</a>
               </div>
               <div class="pull-right">
-                <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                <a href="<?php echo base_url('auth/act_logout'); ?>" class="btn btn-default btn-flat">Sign out</a>
               </div>
             </li>
           </ul>

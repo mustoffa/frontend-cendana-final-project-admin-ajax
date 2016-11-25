@@ -46,31 +46,15 @@
 <!-- ______________________________________________________________________________ -->
 
       <li class="treeview">
-        <a href="<?=base_url('kelas')?>">
+        <a href="<?=base_url('matkul')?>">
           <i class="glyphicon glyphicon-home"></i>
           <span>Kelas</span>
         </a>
       </li>
 <!-- ______________________________________________________________________________ -->
 
-    <li class="treeview">
-        <a href="<?=base_url('jadwal')?>">
-          <i class="glyphicon glyphicon-calendar"></i>
-          <span>Jadwal</span>
-        </a>
-      </li>
-<!-- ______________________________________________________________________________ -->
-
       <li class="treeview">
-        <a href="<?=base_url('user')?>">
-          <i class="glyphicon glyphicon-link"></i>
-          <span>User</span>
-        </a>
-      </li>
-<!-- ______________________________________________________________________________ -->
-
-      <li class="treeview">
-        <a href="<?=base_url('user')?>">
+        <a href="<?php echo base_url('auth/act_logout'); ?>">
           <i class="glyphicon glyphicon-off"></i>
           <span>Sign Out</span>
         </a>

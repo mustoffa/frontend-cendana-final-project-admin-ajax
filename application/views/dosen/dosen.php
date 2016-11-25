@@ -2,7 +2,7 @@
     <section class="content">
         <h1>Data Dosen</h1><br />
 
-        <button class="btn btn-success" onclick="add_dosen()"><i class="glyphicon glyphicon-plus"></i> Add dosen</button>
+        <button class="btn btn-success" onclick="add_dosen()"><i class="glyphicon glyphicon-plus"></i> Add Dosen</button>
         <button class="btn btn-default" onclick="reload_table()"><i class="glyphicon glyphicon-refresh"></i> Reload</button><br /><br />
         
         <table id="table" class="table-hover table-bordered table table-striped" cellspacing="0" width="100%">
@@ -81,61 +81,10 @@
 	    $('.form-group').removeClass('has-error'); // clear error class
 	    $('.help-block').empty(); // clear error string
 	    $('#modal_form').modal('show'); // show bootstrap modal
-	    $('.modal-title').text('Add dosen'); // Set Title to Bootstrap modal title
+	    $('.modal-title').text('Add Dosen'); // Set Title to Bootstrap modal title
 	}
 
-	function edit_dosen(nip)
-	{
-	    save_method = 'update';
-	    $('#form')[0].reset(); // reset form on modals
-	    $('.form-group').removeClass('has-error'); // clear error class
-	    $('.help-block').empty(); // clear error string
-	    //Ajax Load data from ajax
-	    $.ajax({
-	        url : "<?php echo site_url('dosen/dosen_edit/')?>/" + nip,
-	        type: "GET",
-	        dataType: "JSON",
-	        success: function(data)
-	        {
-	            $('[name="nip"]').val(data.nip);
-	            $('[name="nama"]').val(data.nama);
-	            $('[name="jenkel"]').val(data.jenkel);
-	            $('[name="tgl_lahir"]').datepicker('update',data.tgl_lahir);
-	            $('[name="alamat"]').val(data.alamat);
-	            $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
-	            $('.modal-title').text('Edit dosen'); // Set title to Bootstrap modal title
-	        },
-	        error: function (jqXHR, textStatus, errorThrown)
-	        {
-	            alert('Error get data from dosen');
-	        }
-	    });
-	}
-
-	function delete_dosen(nip)
-	{
-	    if(confirm('Are you sure delete this data?'))
-	    {
-	        // ajax delete data to database
-	        $.ajax({
-	            url : "<?php echo site_url('dosen/dosen_delete')?>/"+nip,
-	            type: "POST",
-	            dataType: "JSON",
-	            success: function(data)
-	            {
-	                //if success reload ajax table
-	                $('#modal_form').modal('hide');
-	                reload_table();
-	            },
-	            error: function (jqXHR, textStatus, errorThrown)
-	            {
-	                alert('Error deleting data');
-	            }
-	        });
-	    }
-	}
-
-	function show_detail(nip, nama, jml_sks, ipk)
+	function show_detail(nip, nama)
 	{
 	 	save_method = 'show';
 	    $('#form_show')[0].reset(); // reset form on modals
@@ -166,6 +115,57 @@
 	            alert('Error get data from dosen');
 	        }
 	    });   
+	}
+
+	function edit_dosen(nip)
+	{
+	    save_method = 'update';
+	    $('#form')[0].reset(); // reset form on modals
+	    $('.form-group').removeClass('has-error'); // clear error class
+	    $('.help-block').empty(); // clear error string
+	    //Ajax Load data from ajax
+	    $.ajax({
+	        url : "<?php echo site_url('dosen/dosen_edit/')?>/" + nip,
+	        type: "GET",
+	        dataType: "JSON",
+	        success: function(data)
+	        {
+	            $('[name="nip"]').val(data.nip);
+	            $('[name="nama"]').val(data.nama);
+	            $('[name="jenkel"]').val(data.jenkel);
+	            $('[name="tgl_lahir"]').datepicker('update',data.tgl_lahir);
+	            $('[name="alamat"]').val(data.alamat);
+	            $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
+	            $('.modal-title').text('Edit Dosen'); // Set title to Bootstrap modal title
+	        },
+	        error: function (jqXHR, textStatus, errorThrown)
+	        {
+	            alert('Error get data from dosen');
+	        }
+	    });
+	}
+
+	function delete_dosen(nip)
+	{
+	    if(confirm('Are you sure delete this data?'))
+	    {
+	        // ajax delete data to database
+	        $.ajax({
+	            url : "<?php echo site_url('dosen/dosen_delete')?>/"+nip,
+	            type: "POST",
+	            dataType: "JSON",
+	            success: function(data)
+	            {
+	                //if success reload ajax table
+	                $('#modal_form').modal('hide');
+	                reload_table();
+	            },
+	            error: function (jqXHR, textStatus, errorThrown)
+	            {
+	                alert('Error deleting data');
+	            }
+	        });
+	    }
 	}
 
 	function reload_table()
@@ -227,7 +227,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 	<span aria-hidden="true">&times;</span>
                 </button>
-                <h3 class="modal-title">Nilai dosen</h3>
+                <h3 class="modal-title"></h3>
             </div>
 
             <div class="modal-body form">
@@ -245,7 +245,7 @@
 			            </tbody>
 			            <tfoot>
 				            <tr class="info">
-				                <th colspan="7">&nbsp</th>
+				                <th colspan="4">&nbsp</th>
 				            </tr>
 			            </tfoot>
 			        </table>
@@ -271,7 +271,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 	<span aria-hidden="true">&times;</span>
                 </button>
-                <h3 class="modal-title">dosen Form</h3>
+                <h3 class="modal-title"></h3>
             </div>
 
             <div class="modal-body form">

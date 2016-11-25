@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 23, 2016 at 10:02 AM
+-- Generation Time: Nov 24, 2016 at 07:47 PM
 -- Server version: 5.6.21
 -- PHP Version: 5.6.3
 
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `mahasiswa` (
   `alamat` text,
   `jml_sks` int(5) DEFAULT NULL,
   `ipk` decimal(3,2) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `mahasiswa`
@@ -138,45 +138,114 @@ CREATE TABLE IF NOT EXISTS `nilai` (
 `id_nilai` int(10) unsigned NOT NULL,
   `id_grade` int(11) NOT NULL DEFAULT '8',
   `id_matkul` int(11) NOT NULL,
-  `nim` int(11) NOT NULL,
-  `nip` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
+  `nim` int(11) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `nilai`
 --
 
-INSERT INTO `nilai` (`id_nilai`, `id_grade`, `id_matkul`, `nim`, `nip`) VALUES
-(1, 1, 1, 1, 2),
-(2, 3, 1, 2, 2),
-(3, 1, 1, 3, 2),
-(4, 1, 1, 4, 2),
-(5, 1, 1, 5, 2),
-(6, 1, 1, 6, 2),
-(7, 1, 1, 7, 2),
-(8, 1, 1, 8, 2),
-(9, 1, 1, 9, 2),
-(10, 1, 1, 10, 2),
-(11, 1, 1, 11, 2),
-(12, 1, 1, 12, 2),
-(13, 1, 2, 1, 1),
-(14, 1, 2, 2, 1),
-(15, 1, 2, 3, 1),
-(16, 1, 2, 4, 1),
-(17, 1, 2, 5, 1),
-(18, 1, 2, 6, 1),
-(19, 1, 2, 7, 1),
-(20, 1, 2, 8, 1),
-(21, 1, 2, 9, 1),
-(22, 1, 2, 10, 1),
-(23, 1, 2, 11, 1),
-(24, 1, 2, 12, 1),
-(25, 2, 3, 1, 2),
-(26, 2, 4, 1, 1),
-(27, 1, 1, 16, 2),
-(28, 2, 2, 16, 1),
-(29, 3, 3, 16, 2),
-(30, 4, 4, 16, 1);
+INSERT INTO `nilai` (`id_nilai`, `id_grade`, `id_matkul`, `nim`) VALUES
+(1, 1, 1, 1),
+(2, 3, 1, 2),
+(3, 1, 1, 3),
+(4, 1, 1, 4),
+(5, 1, 1, 5),
+(6, 1, 1, 6),
+(7, 1, 1, 7),
+(8, 1, 1, 8),
+(9, 1, 1, 9),
+(10, 1, 1, 10),
+(11, 1, 1, 11),
+(12, 1, 1, 12),
+(13, 1, 2, 1),
+(14, 1, 2, 2),
+(15, 1, 2, 3),
+(16, 1, 2, 4),
+(17, 1, 2, 5),
+(18, 1, 2, 6),
+(19, 1, 2, 7),
+(20, 1, 2, 8),
+(21, 1, 2, 9),
+(22, 1, 2, 10),
+(23, 1, 2, 11),
+(24, 1, 2, 12),
+(25, 2, 3, 1),
+(26, 2, 4, 1),
+(27, 1, 1, 16),
+(28, 2, 2, 16),
+(29, 3, 3, 16),
+(30, 4, 4, 16);
+
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `show_matkul`
+--
+CREATE TABLE IF NOT EXISTS `show_matkul` (
+`id_matkul` int(10) unsigned
+,`matkul` varchar(50)
+,`kelas` varchar(50)
+,`ruang` varchar(50)
+,`sks` int(1)
+,`nip` int(11)
+,`nama` varchar(50)
+);
+-- --------------------------------------------------------
+
+--
+-- Stand-in structure for view `show_nilai`
+--
+CREATE TABLE IF NOT EXISTS `show_nilai` (
+`id_nilai` int(10) unsigned
+,`id_grade` int(11)
+,`id_matkul` int(11)
+,`nim` int(11)
+,`nama_mhs` varchar(50)
+,`matkul` varchar(50)
+,`kelas` varchar(50)
+,`ruang` varchar(50)
+,`sks` int(1)
+,`grade` char(2)
+,`nama_dosen` varchar(50)
+);
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE IF NOT EXISTS `user` (
+`id` int(10) unsigned NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  `nama_user` varchar(50) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`id`, `username`, `password`, `nama_user`) VALUES
+(1, 'admin', 'admin', 'Mustofa');
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `show_matkul`
+--
+DROP TABLE IF EXISTS `show_matkul`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `show_matkul` AS select `matkul`.`id_matkul` AS `id_matkul`,`matkul`.`matkul` AS `matkul`,`matkul`.`kelas` AS `kelas`,`matkul`.`ruang` AS `ruang`,`matkul`.`sks` AS `sks`,`matkul`.`nip` AS `nip`,`dosen`.`nama` AS `nama` from (`matkul` join `dosen`) where (`matkul`.`nip` = `dosen`.`nip`);
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `show_nilai`
+--
+DROP TABLE IF EXISTS `show_nilai`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `show_nilai` AS select `nilai`.`id_nilai` AS `id_nilai`,`nilai`.`id_grade` AS `id_grade`,`nilai`.`id_matkul` AS `id_matkul`,`nilai`.`nim` AS `nim`,`mahasiswa`.`nama` AS `nama_mhs`,`matkul`.`matkul` AS `matkul`,`matkul`.`kelas` AS `kelas`,`matkul`.`ruang` AS `ruang`,`matkul`.`sks` AS `sks`,`grade`.`grade` AS `grade`,`dosen`.`nama` AS `nama_dosen` from ((((`nilai` join `mahasiswa`) join `matkul`) join `grade`) join `dosen`) where ((`nilai`.`nim` = `mahasiswa`.`nim`) and (`nilai`.`id_matkul` = `matkul`.`id_matkul`) and (`nilai`.`id_grade` = `grade`.`id_grade`) and (`matkul`.`nip` = `dosen`.`nip`));
 
 --
 -- Indexes for dumped tables
@@ -213,6 +282,12 @@ ALTER TABLE `nilai`
  ADD PRIMARY KEY (`id_nilai`);
 
 --
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+ ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -230,7 +305,7 @@ MODIFY `id_grade` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=9;
 -- AUTO_INCREMENT for table `mahasiswa`
 --
 ALTER TABLE `mahasiswa`
-MODIFY `nim` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=19;
+MODIFY `nim` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT for table `matkul`
 --
@@ -240,7 +315,12 @@ MODIFY `id_matkul` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 -- AUTO_INCREMENT for table `nilai`
 --
 ALTER TABLE `nilai`
-MODIFY `id_nilai` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=31;
+MODIFY `id_nilai` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=32;
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
